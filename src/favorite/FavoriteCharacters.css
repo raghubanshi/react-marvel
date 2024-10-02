@@ -1,0 +1,12 @@
+.favoriteCard {
+
+    .CharacterCard img {
+        border-radius: 10px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .collapse-description {
+        margin-top: 10px;
+    }
+}

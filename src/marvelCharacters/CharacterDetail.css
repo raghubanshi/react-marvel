@@ -1,0 +1,17 @@
+.CharacterDetail {
+    .main-img {
+        width: 450px;
+        border-radius: 10px;
+    }
+
+    .comic-thumbnail {
+        width: 150px;
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    .CharacterDetail .main-img {
+        width: 300px;
+    }
+}
