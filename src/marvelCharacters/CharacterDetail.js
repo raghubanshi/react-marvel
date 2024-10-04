@@ -20,9 +20,17 @@ const CharacterDetail = () => {
     const [favoriteSaveError, setFavoriteSaveError] = useState([]);
     const [saveSucess, setsaveSucess] = useState(false);
 
+    const [checkChracter, setCheckChracter] = useState(undefined);
+
     useEffect(function getMarvelCharacter() {
         async function getCharacter() {
             const data = await MarvelApi.getMarvelCharacterById(handle);
+
+            const userFavCharcter = await ExpressApi.getCurrentUserCharacter(currentUser.username, currentUser.id)
+            const nameFav = userFavCharcter.map(d => d.name)
+
+            // Use find with a callback function
+            setCheckChracter(nameFav.find(favName => favName === data.name));
             setCharacter(data);
             // Fetch comics and update the state
             const comicsData = await MarvelApi.getMarvelComicsByCharacterId(handle);
@@ -30,7 +38,7 @@ const CharacterDetail = () => {
             setIsLoadingComics(false); // Comics finished loading
         }
         getCharacter();
-    }, [handle]);
+    }, [handle, checkChracter]);
 
     if (!character) return <LoadingSpinner />;
 
@@ -46,7 +54,7 @@ const CharacterDetail = () => {
             try {
                 await ExpressApi.createCurrentUserCharacter(currentUser.username, data.characterId, data)
                 setsaveSucess(true);
-
+                setCheckChracter(data.name);
             }
             catch (e) {
                 setsaveSucess(false);
@@ -77,7 +85,12 @@ const CharacterDetail = () => {
                     />
                 </div>
                 <div className='col-md-4'>
-                    <button type="button" className="btn btn-info" onClick={favoriteCharcter}>Favorite Character</button>
+                    {checkChracter ? null :
+                        <button type="button" className="btn btn-info" onClick={favoriteCharcter}>
+                            Favorite Character
+                        </button>
+                    }
+
                 </div>
             </div>
             <p className='my-4'>{character.description}</p>
